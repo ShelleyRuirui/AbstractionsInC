@@ -1,4 +1,4 @@
-all: io powertab
+all: io powertab calcPiLeibForm calcPiFromArea
 
 io:exception.o genlib.o simpio.o io.o
 	gcc exception.o genlib.o simpio.o io.o -o io
@@ -11,6 +11,12 @@ powertab:exception.o genlib.o simpio.o powertab.o
 
 powertab.o:powertab.c
 	gcc -c powertab.c
+
+calcPiLeibForm:calcPiLeibForm.c
+	gcc calcPiLeibForm.c -o calcPiLeibForm
+
+calcPiFromArea:calcPiFromArea.c
+	gcc calcPiFromArea.c -lm -L/lib -L/usr/lib -o calcPiFromArea
 
 clean:
 	rm io *.o
