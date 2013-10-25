@@ -1,4 +1,4 @@
-all:Hanio permutation testGraph mondrian DrawFractals
+all:Hanio permutation testGraph mondrian DrawFractals drawtree
 
 Hanio:Hanio.c
 	gcc Hanio.c -o Hanio
@@ -18,11 +18,17 @@ mondrian:mondrian.o genlib.o random.o graphics.o exception.o
 DrawFractals:DrawFractals.o genlib.o random.o graphics.o exception.o
 	gcc DrawFractals.o genlib.o random.o graphics.o exception.o -o DrawFractals -lm
 
+drawtree:drawtree.o genlib.o random.o graphics.o exception.o
+	gcc drawtree.o genlib.o random.o graphics.o exception.o -o drawtree -lm
+
 mondrian.o:mondrian.c 
 	gcc -c mondrian.c
 
 DrawFractals.o:DrawFractals.c
 	gcc -c DrawFractals.c
+
+drawtree.o:drawtree.c
+	gcc -c drawtree.c
 
 clean:
 	rm *.o
