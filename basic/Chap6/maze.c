@@ -9,22 +9,86 @@
 #define ROWS 7
 #define COLUMNS 7
 
-static void solveMaze();
+static bool solveMaze(pointT current);
+static bool solveOneDir(pointT current,pointT next,directionT dir);
+static void printMark();
 static void testRead();
 static void testWall();
+static void initMarks();
 
 int setting[ROWS][COLUMNS];
 int mark[ROWS][COLUMNS];
+pointT start;
+pointT end;
 
 int main()
 {
-  testRead();
-  testWall();
+  //testRead();
+  //testWall();
+  initMarks();
+  ReadMazeMap("maze.data");
+  start=GetStartPosition();
+  end=GetEndPosition();
+   mark[start.x][start.y]=1;
+  bool res=solveMaze(start);
+  printf("Result:%d\n",res);
+  printMark();
 }
 
-static void solveMaze()
+static bool solveMaze(pointT current)
 {
+  if(current.x==end.x && current.y==end.y)
+  {
+    return TRUE;
+  }
+
+  pointT next;
+  next.x=current.x;
+  next.y=current.y-1; 
+  bool res=solveOneDir(current,next,Left);
+  if(res) return TRUE;
+
+  next.x=current.x-1;
+  next.y=current.y;
+  res=solveOneDir(current,next,Up);
+  if(res) return TRUE;
+
+  next.x=current.x;
+  next.y=current.y+1;
+  res=solveOneDir(current,next,Right);
+  if(res) return TRUE;
   
+  next.x=current.x;
+  next.y=current.y+1;
+  res=solveOneDir(current,next,Down);
+  if(res) return TRUE;
+
+  return FALSE;
+}
+
+static bool solveOneDir(pointT current,pointT next,directionT dir)
+{
+  if(!WallExists(current,dir) && next.y>=0 && next.x>=0 && next.x<ROWS && next.y<COLUMNS && !isMarked(next))
+  {
+    MarkSquare(next);
+    bool res=solveMaze(next);
+    UnmarkSquare(next);
+    if(res) return TRUE;
+  }
+  return FALSE;
+}
+
+static void initMarks()
+{
+  int i=0;
+  int j;
+  for(;i<ROWS;i++)
+  {
+    for(j=0;j<COLUMNS;j++)
+    {
+      mark[i][j]=0;
+    }
+  }
 }
 
 void ReadMazeMap(string filename)
@@ -79,14 +143,33 @@ bool WallExists(pointT pt,directionT dir)
 
 void MarkSquare(pointT pt)
 {
+  mark[pt.x][pt.y]=1;
 }
 
 void UnmarkSquare(pointT pt)
 {
+  mark[pt.x][pt.y]=0;
 }
 
 bool isMarked(pointT pt)
 {
+  if(mark[pt.x][pt.y]==1)
+    return TRUE;
+  return FALSE;
+}
+
+static void printMark()
+{
+  int i=0;
+  int j;
+  for(;i<ROWS;i++)
+  {
+    for(j=0;j<COLUMNS;j++)
+    {
+      printf("%d ",mark[i][j]);
+    }
+    printf("\n");
+  }
 }
 
 static void testRead()
