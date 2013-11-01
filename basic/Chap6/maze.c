@@ -58,8 +58,8 @@ static bool solveMaze(pointT current)
   res=solveOneDir(current,next,Right);
   if(res) return TRUE;
   
-  next.x=current.x;
-  next.y=current.y+1;
+  next.x=current.x+1;
+  next.y=current.y;
   res=solveOneDir(current,next,Down);
   if(res) return TRUE;
 
@@ -71,9 +71,11 @@ static bool solveOneDir(pointT current,pointT next,directionT dir)
   if(!WallExists(current,dir) && next.y>=0 && next.x>=0 && next.x<ROWS && next.y<COLUMNS && !isMarked(next))
   {
     MarkSquare(next);
+    //printMark();
     bool res=solveMaze(next);
-    UnmarkSquare(next);
+    
     if(res) return TRUE;
+    UnmarkSquare(next);
   }
   return FALSE;
 }
@@ -160,6 +162,7 @@ bool isMarked(pointT pt)
 
 static void printMark()
 {
+  printf("**********\n");
   int i=0;
   int j;
   for(;i<ROWS;i++)
@@ -170,6 +173,7 @@ static void printMark()
     }
     printf("\n");
   }
+  printf("**********\n");
 }
 
 static void testRead()
@@ -201,4 +205,9 @@ static void testWall()
     printf("cur1 right wrong\n");
   if(WallExists(cur1,Down))
     printf("cur1 down wrong\n");
+
+  cur1.x=2;
+  cur1.y=4;
+  if(!WallExists(cur1,Right))
+    printf("cur1 2 Right wrong\n");
 }
